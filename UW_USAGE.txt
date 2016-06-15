@@ -10,16 +10,12 @@ Before using, please ensure that:
 	d. Tensor fit to produce FA image
 	e. QA checks of SNR and motion to ensure subject meets criteria for inclusion
 
-2. TBSS steps 1, 2, and 3 are complete
-	a. tbss_1_preproc
-	b. tbss_2_reg (ideally wih non-linear registration to study-specific FA template)
-	c. tbss_3_postreg -S (to derive mean_FA and mean_FA skeleten from mean of all subjects in study)
+2. All images that passed QA check have been added to TBSS directory (preferably with [SubjectID]_FA.nii.gz name)
 
-3. The ENIGMA_main.sh and run_ENIGMA_ROI_ALL_script.sh scripts have been edited and saved.
-	a. PROJECT_DIR and DTI_DIR likely will need to be changed in both scripts
-	b. The pattern for subject files may need to be edited in the run_ENIGMA_ROI_ALL_script.sh script.
+3. The run_ENIGMA_ROI_ALL_script.sh script has been edited and saved:
+	a. PROJECT_DIR and DTI_DIR likely will need to be changed
+	b. The pattern for subject files may need to be edited also
 
 
 To run the ROI analyses:
-1. Run the ENIGMA_main.sh script to generate lateralized ROI values for each subject.
-2. Run the run_ENIGMA_ROI_ALL_script.sh script to concatenate results from each subject and obtain values from non-lateralized ROIs.
+1. bash /mnt/stressdevlab/scripts/ROI/enigma/run_ENIGMA_ROI_ALL_script.sh

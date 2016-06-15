@@ -1,5 +1,4 @@
-#!/bin/bash -l
-#$ -S /bin/bash
+#!/bin/bash
 
 # Generalized October 2nd David Rotenberg.
 #######
@@ -62,7 +61,8 @@ typed=FA
 dataset=NARSAD
 PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline/DTI"
 ENIGMA_DIR="/mnt/stressdevlab/scripts/ROI/enigma"
-DTI_DIR="${PROJECT_DIR}/TBSS"
+#DTI_DIR="${PROJECT_DIR}/TBSS"
+DTI_DIR="${PROJECT_DIR}/TEST_TBSS_ENIGMA"
 
 #Go to main DTI directory
 cd ${DTI_DIR}

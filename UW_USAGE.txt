@@ -1,0 +1,25 @@
+This software will extract mean FA values for each subject in a TBSS dataset.
+
+
+Before using, please ensure that:
+
+1. DTI data for all subjects has been preprocessed (all steps below should be complete):
+	a. Converted to NIFTI
+	b. Skull-stripped
+	c. Corrected for motion and eddy current-induced distortions
+	d. Tensor fit to produce FA image
+	e. QA checks of SNR and motion to ensure subject meets criteria for inclusion
+
+2. TBSS steps 1, 2, and 3 are complete
+	a. tbss_1_preproc
+	b. tbss_2_reg (ideally wih non-linear registration to study-specific FA template)
+	c. tbss_3_postreg -S (to derive mean_FA and mean_FA skeleten from mean of all subjects in study)
+
+3. The ENIGMA_main.sh and run_ENIGMA_ROI_ALL_script.sh scripts have been edited and saved.
+	a. PROJECT_DIR and DTI_DIR likely will need to be changed in both scripts
+	b. The pattern for subject files may need to be edited in the run_ENIGMA_ROI_ALL_script.sh script.
+
+
+To run the ROI analyses:
+1. Run the ENIGMA_main.sh script to generate lateralized ROI values for each subject.
+2. Run the run_ENIGMA_ROI_ALL_script.sh script to concatenate results from each subject and obtain values from non-lateralized ROIs.

@@ -1,46 +1,48 @@
 #/*
 # * combine_subject_tables.R
 # * 
-# * Created by Neda Jahanshad - neda.jahanshad@loni.ucla.edu
+# * Created by Neda Jahanshad - neda.jahanshad@ini.usc.edu
 # * ENIGMA_DTI
 # */
 
 #################
-cmdargs = commandArgs(trailingOnly=T);
-TableFile=cmdargs[1]
-subjectIDcol=cmdargs[2]
-subjectList	=cmdargs[3]
-outTable=cmdargs[4]
-Ncov=as.numeric(cmdargs[5]);
-covariates=cmdargs[6]
-Nroi=as.numeric(cmdargs[7]);
-NroiC=cmdargs[7];
-rois=cmdargs[8]
+#cmdargs = commandArgs(trailingOnly=T);
+#TableFile=cmdargs[1]
+#subjectIDcol=cmdargs[2]
+#subjectList	=cmdargs[3]
+#outTable=cmdargs[4]
+#Ncov=as.numeric(cmdargs[5]);
+#covariates=cmdargs[6]
+#Nroi=as.numeric(cmdargs[7]);
+#NroiC=cmdargs[7];
+#rois=cmdargs[8]
 #################
-#Table<-"./ALL_INFO.txt"
-#subjectIDcol="subjectID"
-#subjectList="./subjectList.csv"
-#outTable="./FULL_ROItable.csv"
-#Ncov=2
-#ovariates="Age;Sex"
-#roi=2
-#NroiC="2"
-#rois="IC;EC"
+TableFile<-"/mnt/stressdevlab/new_memory_pipeline/DTI/TBSS_NOUNWARP/SubCov.txt"
+subjectIDcol="SubjectID"
+subjectList="/mnt/stressdevlab/new_memory_pipeline/DTI/TBSS_NOUNWARP/ROIALL/AvgList.csv"
+outTable="/mnt/stressdevlab/new_memory_pipeline/DTI/TBSS_NOUNWARP/ROIALL/25ROI_Stats.csv"
+Ncov=as.numeric(2)
+covariates="Age;ChildAbuse"
+Nroi=as.numeric(2)
+NroiC="all"
+#rois="ACR;ACR-L"
+
 ################
-if (substring(TableFile,nchar(TableFile)-3,nchar(TableFile))==".csv"){
-	tokT=",";
-} else {tokT="\t"} 
-if (substring(subjectList,nchar(subjectList)-3,nchar(subjectList))==".csv"){
-	tokS=",";
-} else {tokS="\t"}
+#if (substring(TableFile,nchar(TableFile)-3,nchar(TableFile))==".csv"){
+#	tokT=",";
+#} else {tokT="\t"} 
+#if (substring(subjectList,nchar(subjectList)-3,nchar(subjectList))==".csv"){
+#	tokS=",";
+#} else {tokS="\t"}
 
 ###################
 ##filter out table to include only variables of interest
 ###################
-Table<-read.table(TableFile,sep=tokT,header=T,blank.lines.skip = TRUE)
+Table<-read.table(TableFile,sep=",",header=T,blank.lines.skip = TRUE)
 columnnames<-colnames(Table)
-#print(columnnames)
-#print(subjectIDcol)
+print(columnnames)
+print(subjectIDcol)
+
 DesignMatrix<-data.frame(subjectID=Table[,which(columnnames==subjectIDcol)])
 #print(DesignMatrix$subjectID)
 
@@ -66,10 +68,10 @@ if (length(iNA > 0)) {
 ##############
 
 ### match file for subjects 
-subjList<-data.frame(read.table(subjectList,sep=tokS,header=FALSE,blank.lines.skip = TRUE))
+subjList<-data.frame(read.table(subjectList,sep=",",header=FALSE,blank.lines.skip = TRUE))
 files=subjList[,2]
 matchind = match(DesignMatrix$subjectID,subjList[,1]);
-#print(as.character(subjList[,1]))
+print(as.character(subjList[,1]))
 
 ### for each subject ID, read file and add columns corresponding to ROIs
 done=0;
@@ -128,4 +130,4 @@ if (length(iNA > 0)) {
 	DesignMatrix<-DesignMatrix[-which(apply(DesignMatrix,1,function(x)any(is.na(x)))),]
 }
 
-write.table(DesignMatrix,outTable,sep=",",row.names=F,col.names=T);
+write.table(DesignMatrix,outTable,sep=",",row.names=F,col.names=T,quote=F);

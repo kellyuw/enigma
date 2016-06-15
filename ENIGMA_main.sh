@@ -59,103 +59,70 @@ fi
 
 echo  "Default Type = FA"
 typed=FA
-dataset=STD
-ENIGMA_DIR=/quarantine/ENIGMA
+dataset=NARSAD
+PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline/DTI"
+ENIGMA_DIR="/mnt/stressdevlab/scripts/ROI/enigma"
+DTI_DIR="${PROJECT_DIR}/TBSS"
 
-mkdir ${typed}_to_target
-mkdir ${typed}_skels
+#Go to main DTI directory
+cd ${DTI_DIR}
 
-echo "TBSS STEP 1"
-tbss_1_preproc *.nii.gz
+#Make directories to organize target and skeleton
+mkdir -p ${DTI_DIR}/${typed}_to_target
+mkdir -p ${DTI_DIR}/${typed}_skels
 
-echo "TBSS_STEP 2"
-tbss_2_reg -t ${ENIGMA_DIR}/ENIGMA_DTI_FA.nii.gz
+#echo "TBSS STEP 1"
+#tbss_1_preproc *.nii.gz
 
-pause_crit=$( qstat | grep tbss_2_reg);
+#echo "TBSS_STEP 2"
+#tbss_2_reg -t ${ENIGMA_DIR}/ENIGMA_DTI_FA.nii.gz
 
-while [ -n "$pause_crit" ];
-do
-    pause_crit=$( qstat | grep tbss_2_reg)
-    sleep 20
+#pause_crit=$( qstat | grep tbss_2_reg);
+
+#while [ -n "$pause_crit" ];
+#do
+#    pause_crit=$( qstat | grep tbss_2_reg)
+#    sleep 20
+#done
+#echo "Registration Complete"
+
+#echo "TBSS STEP 3"
+#tbss_3_postreg -S
+
+#Copy FA_to_target images to separate directory
+for i in `ls FA/*FA_to_target.nii.gz`; do
+	cp $i ${DTI_DIR}/FA_to_target/`basename $i`
 done
-echo "Registration Complete"
 
-echo "TBSS STEP 3"
-tbss_3_postreg -S
+cd ${DTI_DIR}/${typed}_to_target
 
-cp FA/*FA_to_target.nii.gz FA_to_target/ && cd FA_to_target
+for a in `ls *.nii.gz`; do 
+	tbss_skeleton -i ${ENIGMA_DIR}/ENIGMA_DTI_FA.nii.gz -p 0.049 ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask_dst.nii.gz /usr/share/data/fsl-mni152-templates/LowerCingulum_1mm.nii.gz ${a} ${DTI_DIR}/${typed}_skels/`basename ${a} .nii.gz`_FAskel -s ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask.nii.gz
+done
 
-for a in *; 
-do tbss_skeleton -i ${ENIGMA_DIR}/ENIGMA_DTI_FA.nii.gz -p 0.049 ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask_dst.nii.gz /usr/share/data/fsl-mni152-templates/LowerCingulum_1mm.nii.gz ${a} ${a}_FAskel -s ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask.nii.gz
+cd ${DTI_DIR}
+
+for j in `ls ${typed}_skels/*skel*.nii.gz`; do
+	cp $i FA_to_target/`basename $i`
 done
 
 cp *skel* ../FA_skels/ && cd ../FA_skels
 
-for sub in * ;
-do 
-fslmaths $sub -mul 1 $sub -odt float
+cd ${DTI_DIR}/FA_skels
+
+for sub in `ls *.nii.gz` ; do 
+	fslmaths $sub -mul 1 $sub -odt float
 done
 
-cd ..
+cd ${DTI_DIR}
 
-mkdir ${dataset}_${typed}
-dirO1=./${dataset}_${typed}/
+dirO1="${DTI_DIR}/${dataset}_${typed}"
+mkdir -p ${dir01}
 
 
-
-for subject in $( ls FA_skels | grep .nii.gz)
-
-do
-
-base=$(basename $subject .nii.gz);
-echo "Basename $base"
-${ENIGMA_DIR}/singleSubjROI_exe ${ENIGMA_DIR}/ENIGMA_look_up_table.txt ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask.nii.gz ${ENIGMA_DIR}/JHU-WhiteMatter-labels-1mm.nii.gz ${dirO1}${base}_ROIout FA_skels/${subject}
+for subject in $( ls FA_skels | grep .nii.gz); do
+	base=$(basename $subject .nii.gz);
+	echo "Basename $base"
+	${ENIGMA_DIR}/singleSubjROI_exe ${ENIGMA_DIR}/ENIGMA_look_up_table.txt ${ENIGMA_DIR}/ENIGMA_DTI_FA_skeleton_mask.nii.gz ${ENIGMA_DIR}/JHU-WhiteMatter-labels-1mm.nii.gz ${dirO1}/${base}_ROIout ${DTI_DIR}/FA_skels/${subject}
 
 done
-
-
-#######
-## part 2 - loop through all subjects to create ROI file 
-##			removing ROIs not of interest and averaging others
-#######
-
-#make an output directory for all files
-mkdir ${dataset}_${typed}_2
-dirO2=./${dataset}_${typed}_2/
-
-
-# you may want to automatically create a subjectList file 
-#    in which case delete the old one
-#    and 'echo' the output files into a new name
-rm ./subjectList.csv
-
-for subject in $( ls FA_skels/ | grep .nii.gz)
-
-do
-base=$(basename $subject .nii.gz);
-${ENIGMA_DIR}//averageSubjectTracts_exe ${dirO1}${base}_ROIout.csv ${dirO2}${base}_ROIout_avg.csv
-
-
-# can create subject list here for part 3!
-echo ${base},${dirO2}${base}_ROIout_avg.csv >> ./subjectList.csv
-done
-
-
-#######
-## part 3 - combine all 
-#######
-Table=/quarantine/ENIGMA/ALL_Subject_Info_2.csv
-subjectIDcol=subjectID
-subjectList=./subjectList.csv
-outTable=./combinedROItable.csv
-Ncov=2
-covariates="Age;Sex"
-Nroi="all" #2
-rois="IC;EC"
-
-#location of R binary 
-Rbin=`which R`
-
-#Run the R code
-${Rbin} --no-save --slave --args ${Table} ${subjectIDcol} ${subjectList} ${outTable} ${Ncov} ${covariates} ${Nroi} ${rois} <  /quarantine/ENIGMA/combine_subject_tables.R
-

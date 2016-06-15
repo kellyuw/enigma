@@ -15,15 +15,27 @@
 #%% neda.jahanshad@ini.usc.edu / kristian.eschenburg@ini.usc.edu / derrek.hibar@ini.usc.edu
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-cmdargs = commandArgs(trailingOnly=T);
-site=cmdargs[1];  
+#cmdargs = commandArgs(trailingOnly=T);
+#site=cmdargs[1];  
 
-outD = '.QC_ENIGMA/'
-CSVfile = 'combinedROItable.csv'
-Nrois = 18;
-rois = "AverageFA;BCC;GCC;SCC;CC;CGC;CGH;CR;EC;FX;FXST;IC;IFO;PTR;SFO;SLF;SS;UNC"
-outPDF = 'ENIGMA_DTI_allROI_histograms.pdf'
-outTXT = 'ENIGMA_DTI_allROI_stats.txt'
+outD = '/mnt/stressdevlab/new_memory_pipeline/DTI/NOUNWARP_B0MASK/QC_ENIGMA/'
+CSVfile = '/mnt/stressdevlab/new_memory_pipeline/DTI/NOUNWARP_B0MASK/ROIALL/25ROI_Stats.txt'
+#Nrois = 18;
+#rois = "AverageFA;BCC;GCC;SCC;CC;CGC;CGH;CR;EC;FX;FXST;IC;IFO;PTR;SFO;SLF;SS;UNC"
+
+rois="AverageFA;ACR;ALIC;BCC;CC;CGC;CGH;CR;CST;EC;FX;FXST;GCC;IC;IFO;PCR;PLIC;PTR;RLIC;SCC;SCR;SFO;SLF;SS;UNC"
+Nrois = 25;
+outPDF = '/mnt/stressdevlab/new_memory_pipeline/DTI/NOUNWARP_B0MASK/QC_ENIGMA/NARSAD_NOUNWARP_25ROI_histograms.pdf'
+outTXT = '/mnt/stressdevlab/new_memory_pipeline/DTI/NOUNWARP_B0MASK/QC_ENIGMA/NARSAD_NOUNWARP_25ROI_stats.txt'
+
+#if (NroiC=="all") {
+#			ROImatrix<-data.matrix(read.table(as.character(Rfile),sep=",",header=T,blank.lines.skip = TRUE,na.strings = "NaN",row.names=1))
+#			rownames=row.names(ROImatrix)
+#			for (r in 1:length(rownames)) {
+#			origcolnames = colnames(DesignMatrix);
+#			DesignMatrix[,length(DesignMatrix)+1] = rep(NA,length(as.vector(matchind)))
+#			colnames(DesignMatrix)<-c(origcolnames,rownames[r])
+#			}
 
 
 dir.create(outD)
@@ -83,12 +95,13 @@ if (Nrois > 0)
 	minSubj = Table[j,1]
 	
 	stats = c(ROI, N, mu, sdev, maxV, minV);
+
 	
-	
+
 	write.table(t(as.matrix(stats)),file = outTXT, append=T, quote=F, col.names=F,row.names=F, sep="\t");
 	write(paste("      \t      \t      \t      \t     ", maxSubj, "\t", minSubj),file = outTXT, append=T);
 		
-	hist(DATA, breaks = hbins, main = paste(site,ROI));
+	hist(DATA, breaks = hbins, main = paste(ROI));
 	
 	## uncomment the following 3 lines if you want to output individual histogram PNGs for each inputted ROI
         # png(paste(outD,ROI,"hist_data.png"));

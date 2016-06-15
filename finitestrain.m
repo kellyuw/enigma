@@ -1,5 +1,5 @@
 load transform.txt
-dirs=load('/projects/spins/qc/ENIGMA/dirs_60.dat')
+dirs=load('/projects/spins/qc/ENIGMA/dirs_64.dat')
 fd = fopen('newdirs.dat','w');
 % NB: this changes with the number of directions
 for (i=0:64) 

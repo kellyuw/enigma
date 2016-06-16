@@ -22,7 +22,7 @@ Example:
 	./singleSubjROI_exe ENIGMA_look_up_table.txt mean_FA_skeleton.nii.gz JHU-WhiteMatter-labels-1mm.nii.gz Subject*_ROIout Subject*_FA.nii.gz
 
 
-DTI Quick Start
+Preparation of FA images
 ---------------
 
 This software will extract mean FA values for each subject in a TBSS dataset.
@@ -31,25 +31,30 @@ This software will extract mean FA values for each subject in a TBSS dataset.
 Before using, please ensure that:
 
 1. DTI data for all subjects has been preprocessed (all steps below should be complete):
-	a. Converted to NIFTI
-	b. Skull-stripped
-	c. Corrected for motion and eddy current-induced distortions
-	d. Tensor fit to produce FA image
-	e. QA checks of SNR and motion to ensure subject meets criteria for inclusion
+	* Converted to NIFTI
+	* Skull-stripped
+	* Corrected for motion and eddy current-induced distortions
+	* Tensor fit to produce FA image
+	* QA checks of SNR and motion to ensure subject meets criteria for inclusion
 
 2. All images that passed QA check have been added to TBSS directory (preferably with [SubjectID]_FA.nii.gz name)
 
 3. The UW_ENIGMA_TBSS.sh and UW_ENIGMA_ROI.sh scripts have been edited and saved:
-	a. PROJECT_DIR and DTI_DIR likely will need to be changed
-	b. The pattern for subject files (in UW_ENIGMA_TBSS.sh) may need to be edited also
+	* PROJECT_DIR and DTI_DIR likely will need to be changed
+	* The pattern for subject FA files (in UW_ENIGMA_TBSS.sh) may need to be edited also
 
 
-Finally, to run the ROI analyses:
+
+Running the ROI Analyses
+---------------
 
 1. Run the UW_ENIGMA_TBSS.sh script to execute first three steps of TBSS (preprocessing, registration, and post-registration):
-	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_TBSS.sh
+
+    `bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_TBSS.sh`
 
 2. Double-check the FASubs.txt and FADirs.txt files to confirm that they match TBSS directory structure
 
 3. Run the UW_ENIGMA_ROI.sh script to run ENIGMA C++ scripts that will create table of values for all subjects (63 ROIs each):
-	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_ROI.sh
+
+    `bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_ROI.sh`
+

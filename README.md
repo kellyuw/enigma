@@ -15,11 +15,12 @@ This code will print out the average FA value along a skeleton and ROI values on
 
 The look up table for the atlas should be tab-delimited --  the first column should refer to the voxel value within the image and the second column should refer to the desired label of the region.
 
-    ./singleSubjROI_exe look_up_table.txt skeleton.nii.gz JHU-WhiteMatter-labels-1mm.nii.gz OutputfileName Subject_FAskeleton.nii.gz
+	./singleSubjROI_exe look_up_table.txt skeleton.nii.gz JHU-WhiteMatter-labels-1mm.nii.gz OutputfileName Subject_FAskeleton.nii.gz
 	
 Example:
  
-    ./singleSubjROI_exe ENIGMA_look_up_table.txt mean_FA_skeleton.nii.gz JHU-WhiteMatter-labels-1mm.nii.gz Subject*_ROIout Subject*_FA.nii.gz
+	./singleSubjROI_exe ENIGMA_look_up_table.txt mean_FA_skeleton.nii.gz JHU-WhiteMatter-labels-1mm.nii.gz Subject*_ROIout Subject*_FA.nii.gz
+
 
 DTI Quick Start
 ---------------
@@ -38,10 +39,17 @@ Before using, please ensure that:
 
 2. All images that passed QA check have been added to TBSS directory (preferably with [SubjectID]_FA.nii.gz name)
 
-3. The run_ENIGMA_ROI_ALL_script.sh script has been edited and saved (as indicated below):
+3. The UW_ENIGMA_TBSS.sh and UW_ENIGMA_ROI.sh scripts have been edited and saved:
 	a. PROJECT_DIR and DTI_DIR likely will need to be changed
-	b. The pattern for subject files may need to be edited also
+	b. The pattern for subject files (in UW_ENIGMA_TBSS.sh) may need to be edited also
 
 
 Finally, to run the ROI analyses:
-1. bash /mnt/stressdevlab/scripts/ROI/enigma/run_ENIGMA_ROI_ALL_script.sh
+
+1. Run the UW_ENIGMA_TBSS.sh script to execute first three steps of TBSS (preprocessing, registration, and post-registration):
+	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_TBSS.sh
+
+2. Double-check the FASubs.txt and FADirs.txt files to confirm that they match TBSS directory structure
+
+3. Run the UW_ENIGMA_ROI.sh script to run ENIGMA C++ scripts that will create table of values for all subjects (63 ROIs each):
+	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_ROI.sh

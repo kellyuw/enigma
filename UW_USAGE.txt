@@ -12,10 +12,17 @@ Before using, please ensure that:
 
 2. All images that passed QA check have been added to TBSS directory (preferably with [SubjectID]_FA.nii.gz name)
 
-3. The run_ENIGMA_ROI_ALL_script.sh script has been edited and saved:
+3. The UW_ENIGMA_TBSS.sh and UW_ENIGMA_ROI.sh scripts have been edited and saved:
 	a. PROJECT_DIR and DTI_DIR likely will need to be changed
-	b. The pattern for subject files may need to be edited also
+	b. The pattern for subject files (in UW_ENIGMA_TBSS.sh) may need to be edited also
 
 
 To run the ROI analyses:
-1. bash /mnt/stressdevlab/scripts/ROI/enigma/run_ENIGMA_ROI_ALL_script.sh
+
+1. Run the UW_ENIGMA_TBSS.sh script to run first three steps of TBSS (preprocessing, registration, and post-registration):
+	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_TBSS.sh
+
+2. Double-check the FASubs.txt and FADirs.txt files to confirm that they match TBSS directory structure
+
+3. Run the UW_ENIGMA_ROI.sh script to run ENIGMA C++ scripts that will create table of values for all subjects (63 ROIs each):
+	bash /mnt/stressdevlab/scripts/ROI/enigma/UW_ENIGMA_ROI.sh

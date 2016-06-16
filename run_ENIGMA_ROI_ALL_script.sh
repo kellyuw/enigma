@@ -6,13 +6,12 @@
 
 
 ENIGMA_DIR=/mnt/stressdevlab/scripts/ROI/enigma
-#SubjectList=$1
-#InDirList=$2
-#OutDir=$3
+TBSS_DIR=$1
 
 METRIC=FA
 PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline"
-DTI_DIR="${PROJECT_DIR}/DTI/TBSS_RESTORE"
+#DTI_DIR="${PROJECT_DIR}/DTI/TBSS_RESTORE"
+DTI_DIR="${PROJECT_DIR}/DTI/${TBSS_DIR}"
 
 SubjectList="${DTI_DIR}/FASubs.txt"
 InDirList="${DTI_DIR}/FADirs.txt"

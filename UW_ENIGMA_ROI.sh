@@ -4,7 +4,7 @@
 ## Modified 03/2016 by: kelly89@uw.edu
 
 
-ENIGMA_DIR=/mnt/stressdevlab/scripts/ROI/enigma
+ENIGMA_DIR=/mnt/stressdevlab/scripts/DTI/enigma
 TBSS_DIR=$1
 
 METRIC=FA

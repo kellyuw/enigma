@@ -8,7 +8,7 @@ ENIGMA_DIR=/mnt/stressdevlab/scripts/DTI/enigma
 TBSS_DIR=$1
 
 METRIC=FA
-PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline"
+PROJECT_DIR="/mnt/stressdevlab/beip"
 DTI_DIR="${PROJECT_DIR}/DTI/${TBSS_DIR}"
 
 SubjectList="${DTI_DIR}/FASubs.txt"
@@ -57,6 +57,8 @@ for Subject in `cat ${SubjectList}`; do
 done
 
 paste ${ENIGMA_DIR}/Rows.csv `ls -1 ${OutDir}/Final/Final_AverageFA_*.csv` | tee ${OutDir}/Final/Final_AverageFA_AllSubjects.csv
+/mnt/stressdevlab/scripts/Preprocessing/transpose.awk ${OutDir}/Final/Final_AverageFA_AllSubjects.csv > ${OutDir}/Final/Final_AverageFA_AllSubjects_T.csv
+
 #Table="`dirname ${OutDir}`/SubCov.txt"
 #subjectIDcol=SubjectID
 ##subjectList=./subjectList.csv

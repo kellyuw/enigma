@@ -9,7 +9,7 @@ ENIGMA_DIR=/mnt/stressdevlab/scripts/DTI/enigma
 TBSS_DIR=$1
 
 METRIC=FA
-PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline"
+PROJECT_DIR="/mnt/stressdevlab/beip"
 DTI_DIR="${PROJECT_DIR}/DTI/${TBSS_DIR}"
 
 SubjectList="${DTI_DIR}/FASubs.txt"

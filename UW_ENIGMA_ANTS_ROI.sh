@@ -1,20 +1,21 @@
 #!/bin/bash
 ## Runs ENIGMA singleSubjROI_exe and averageSubjectTracts_exe to generate table of average FA values from 63 ROIs
 ## Original script developed by: neda.jahanshad@ini.usc.edu
-## Modified 10/2016 by: kelly89@uw.edu
+## Modified 03/2016 by: kelly89@uw.edu
 
-
-ENIGMA_DIR=/mnt/stressdevlab/scripts/DTI/enigma
-TBSS_DIR=$1
 
 METRIC=FA
 PROJECT_DIR="/mnt/stressdevlab/new_memory_pipeline/DTI"
-DTI_DIR="${PROJECT_DIR}/${TBSS_DIR}"
+ENIGMA_DIR="/mnt/stressdevlab/scripts/DTI/enigma"
+TBSS_DIR="${PROJECT_DIR}/ANTS_TBSS_ENIGMA"
+TEMPLATE_DIR="${PROJECT_DIR}/TestNewScript_ANTS_TBSS_ENIGMA/ENIGMA_targets_edited"
+#TBSS_DIR=$1
 
-SubjectList="${DTI_DIR}/ENIGMA/FASubs.txt"
-InDirList="${DTI_DIR}/ENIGMA/FADirs.txt"
-OutDir="${DTI_DIR}/ENIGMA/ENIGMA_ROI"
+SubjectList="${TBSS_DIR}/FASubs.txt"
+InDirList="${TBSS_DIR}/FADirs.txt"
+OutDir="${TBSS_DIR}/EXTRAROI"
 
+export ANTSPATH=/usr/local/ANTs-2.1.0-rc3/bin/
 
 #######
 ## part 1 - loop through all subjects to create a subject ROI file 
@@ -23,11 +24,8 @@ OutDir="${DTI_DIR}/ENIGMA/ENIGMA_ROI"
 mkdir -p ${OutDir}
 
 for Subject in `cat ${SubjectList}` ; do
-	infile=`grep -E "${Subject}" ${InDirList}`
-	echo ${infile}
-
+	infile="${TBSS_DIR}/FA_skels/${Subject}_masked_FAskel.nii.gz"
 	${ENIGMA_DIR}/singleSubjROI_exe ${ENIGMA_DIR}/ENIGMA_look_up_table.txt ${ENIGMA_DIR}/mean_FA_skeleton.nii.gz ${ENIGMA_DIR}/JHU-WhiteMatter-labels-1mm.nii.gz ${OutDir}/${Subject}_ROI ${infile}
-
 done
 
 #######
@@ -36,6 +34,7 @@ done
 #######
 
 for Subject in `cat ${SubjectList}` ; do
+	echo ${Subject}
 	${ENIGMA_DIR}/averageSubjectTracts_exe ${OutDir}/${Subject}_ROI.csv ${OutDir}/${Subject}_ROI_avg.csv
 
 	# Add to subject list for part 3

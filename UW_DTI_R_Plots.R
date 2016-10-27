@@ -15,7 +15,7 @@
 #%% neda.jahanshad@ini.usc.edu / kristian.eschenburg@ini.usc.edu / derrek.hibar@ini.usc.edu
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-TBSSDIR = cmdargs[1];  
+TBSSDIR = '/mnt/stressdevlab/SAS_DTI/TBSS-RemoveBadDir'
 
 OUTDIR = paste(TBSSDIR,'/QC_ENIGMA',sep = '')
 CSVFILE = paste(TBSSDIR,'/EXTRAROI/Final/Final_AverageFA_AllSubjects_T.csv',sep = '')
